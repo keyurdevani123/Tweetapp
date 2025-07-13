@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-l@i%ja+@xojr-tw)9f*1-#rdt83i-%i*or*#y2whe4$t50!2j1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['TweetApp.onrender.com']
 
 
 # Application definition
@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     # 'livereload.middleware.LiveReloadScript',
     #'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
@@ -117,6 +118,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
