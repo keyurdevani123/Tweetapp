@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}Comments for Tweet{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px; margin: 0 auto;">
+    <!-- Display the Tweet -->
+    <div class="card mb-4" style="border-radius: 10px; background: #ffffff; color: #333; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="card-body">
+            <h5 class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: bold; color: #007bff;">
+                    <a href="{% url 'user_details' tweet.user.id %}" style="color: #007bff; text-decoration: none;">
+                        {{ tweet.user.username }}
+                    </a>
+                </span>
+                <span style="color: #6c757d; font-size: 0.9rem;">
+                    {{ tweet.created_at|date:"F j, Y, g:i a" }}
+                </span>
+            </h5>
+    
+            <p class="card-text mt-3" style="color: #555; font-size: 1rem;">
+                {{ tweet.text }}
+            </p>
+    
+            {% if tweet.photo %}
+            <div class="text-center mt-3">
+                <img src="{{ tweet.photo.url }}" alt="Tweet Image" class="img-fluid" style="border-radius: 10px; max-height: 300px; object-fit: cover;">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Display Comments -->
+    <div class="mt-4">
+        <h4 style=";">Comments</h4>
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="card mb-3" style="border-radius: 8px; background: #f8f9fa; color: #333; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);">
+                <div class="card-body">
+                    <strong style="color: #007bff;">
+                        <a href="{% url 'user_details' comment.user.id %}" style="color: #007bff; text-decoration: none;">
+                            {{ comment.user.username }}
+                        </a>
+                    </strong> said:
+                    <p style="margin-top: 8px; font-size: 0.95rem;">{{ comment.text }}</p>
+                    <span class="text-muted" style="font-size: 0.8rem;">{{ comment.created_at|date:"F j, Y, g:i a" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style=";">No comments yet. Be the first to comment!</p>
+        {% endif %}
+    </div>
+
+    <!-- Add Comment Form -->
+    <div class="mt-4">
+        <h5 style=";">Add a Comment</h5>
+        <form method="post" action="{% url 'tweet_comments' tweet.id %}">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none;">Post Comment</button>
+        </form>
+    </div>
+
+
+</div>
+{% endblock %}

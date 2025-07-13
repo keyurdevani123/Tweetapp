@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        {% for tweet in tweets %}
+        <div class="col-12 mb-4"> <!-- Ensures each tweet is in a separate row -->
+            <div class="card" style="width: 100%; height: auto; max-width: 30rem; background: rgb(243, 245, 248); border-radius: 8px; overflow: hidden;">
+                
+                {% if tweet.photo %}
+                    <!-- Wrap the image in an anchor tag for the clickable functionality -->
+                    <a href="{% url 'tweet_view' tweet.id %}">
+                        <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Tweet Image" style="height: 300px; object-fit: cover; border-bottom: 1px solid #333;">
+                    </a>
+                {% endif %}
+
+                <div class="card-body" style="padding: 15px; background-color: #f9f9f9;">
+                    <h5 class="card-title" style="display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem;">
+                        <span style="font-weight: bold; color:rgb(109, 168, 231); margin-right: 60px;">
+                            <a href="{% url 'user_details' tweet.user.id %}" style="color:rgb(24, 115, 212); text-decoration: none; font-size: 1rem;">@{{ tweet.user.username }}</a>
+                        </span>
+                        <span style="color:rgb(64, 66, 66); font-size: 0.9rem;">
+                            {{ tweet.created_at|date:"F j, Y, g:i a" }}
+                        </span>
+                    </h5>        
+                    <div class="card-container" 
+                        onclick="window.location.href='{% url 'tweet_view' tweet.id %}'" 
+                        style="cursor: pointer; padding: 10px; margin-bottom: 10px; background: #f9f9f9; transition: background-color 0.3s;">
+                        <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgb(48, 49, 51); margin: 0;">
+                            {{ tweet.text }}
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center" style="color:rgb(103, 107, 110); font-size: 14px; margin-top: 10px;">
+                        <!-- Like Button -->
+                        <span style="display: flex; align-items: center; gap: 5px;">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'like_tweet' tweet.id %}" class="like-link" data-tweet-id="{{ tweet.id }}" style="text-decoration: none;">
+                                    <i id="like-icon-{{ tweet.id }}" class="fa-solid fa-heart" style="cursor: pointer; color: {% if tweet.liked_by_user %}red{% else %}gray{% endif %};"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}" style="text-decoration: none; cursor: pointer;">
+                                    <i class="fa-solid fa-heart" style="color:gray;"></i>
+                                </a>
+                            {% endif %}
+                            <span id="like-count-{{ tweet.id }}" style="font-weight: bold;">{{ tweet.likes_count }}</span>
+                        </span>
+                    
+                        <!-- Comment Button -->
+                        <span style="display: flex; align-items: center; gap: 5px;">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'tweet_comments' tweet.id %}" style="text-decoration: none; color: inherit;">
+                                    <i class="fa fa-comment" style="color:rgb(128, 134, 139);"></i>
+                                    <span id="comment-count-{{ tweet.id }}" style="font-weight: bold;">{{ tweet.comments_count }}</span>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}" style="text-decoration: none; color: inherit;">
+                                    <i class="fa fa-comment" style="color:rgb(128, 134, 139);"></i>
+                                    <span id="comment-count-{{ tweet.id }}" style="font-weight: bold;">{{ tweet.comments_count }}</span>
+                                </a>
+                            {% endif %}
+                        </span>
+
+                        <!-- Views Button -->
+                        <span style="display: flex; align-items: center; gap: 5px;">
+                            <i class="fa fa-eye" style="color:rgb(90, 92, 94);"></i>
+                            <span id="view-count-{{ tweet.id }}" style="font-weight: bold;">{{ tweet.views }}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.like-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();  // Prevent the default link behavior
+            const tweetId = link.getAttribute('data-tweet-id');
+            const icon = document.getElementById('like-icon-' + tweetId);
+            const count = document.getElementById('like-count-' + tweetId);
+    
+            fetch(link.href)
+                .then(response => response.json())
+                .then(data => {
+                    // Update the like button color
+                    if (data.liked) {
+                        icon.style.color = 'red';  // User liked the tweet
+                    } else {
+                        icon.style.color = 'gray';  // User unliked the tweet
+                    }
+    
+                    // Update the like count
+                    count.textContent = data.likes_count;
+                });
+        });
+    });
+</script>
+
+{% endblock %}

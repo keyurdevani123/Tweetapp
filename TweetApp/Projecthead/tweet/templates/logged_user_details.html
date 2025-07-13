@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}My Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 80px auto;">
+    <div class="card shadow" style="border-radius: 18px; border: none;">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <!-- Profile Image and Username -->
+                <div class="col-12 col-sm-4 text-center mb-3 mb-sm-0">
+                    <img src="{% if user.user_profile_image %}{{ user.user_profile_image.url }}{% else %}/static/default_profile.png{% endif %}" 
+                         alt="Profile Image"
+                         class="rounded-circle border border-3 border-primary"
+                         style="width: 110px; height: 110px; object-fit: cover;">
+                    <h4 class="text-dark fw-bold mt-3 mb-0">{{ user.username }}</h4>
+                </div>
+                <!-- Stats and Edit Button -->
+                <div class="col-12 col-sm-8">
+                    <div class="d-flex justify-content-around mb-3">
+                        <div class="text-center">
+                            <a href="{% url 'user_tweets' user.id %}" class="text-decoration-none">
+                                <div class="fw-bold" style="font-size: 1.1rem;">{{ user.tweets.count }}</div>
+                                <div class="text-primary small">Tweets</div>
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'followers_list' user.id %}" class="text-decoration-none">
+                                <div class="fw-bold" style="font-size: 1.1rem;">{{ user.followers.count }}</div>
+                                <div class="text-primary small">Followers</div>
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'following_list' user.id %}" class="text-decoration-none">
+                                <div class="fw-bold" style="font-size: 1.1rem;">{{ user.following.count }}</div>
+                                <div class="text-primary small">Following</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a href="" class="btn btn-outline-primary px-4 me-2">Edit Profile</a>
+                        <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="btn btn-outline-danger px-4">Logout</a>
+                        <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">{% csrf_token %}</form>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <!-- User Info -->
+            <div class="px-2" style="font-size: 1rem; color: #495057;">
+                <p class="mb-2">
+                    <strong>Name:</strong>
+                    <span class="text-primary">{{ user.first_name }} {{ user.last_name }}</span>
+                </p>
+                <p class="mb-0">
+                    <strong>Joined:</strong>
+                    <span class="text-primary">{{ user.date_joined|date:"F j, Y" }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

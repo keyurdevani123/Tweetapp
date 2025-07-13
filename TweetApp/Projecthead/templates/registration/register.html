@@ -1,0 +1,12 @@
+{% extends "layout.html" %} 
+
+{% block content %}
+    <h1 class="text-center text-green">Chai Headquarter</h1>
+    
+    <h2>Registration</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+{% endblock %}

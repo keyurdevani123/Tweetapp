@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Unread Notifications</h2>
+
+    {% if unread_notifications %}
+        <ul class="list-group">
+            {% for notification in unread_notifications %}
+                <li class="list-group-item">
+                    <p class="mb-1">{{ notification.message }}</p>
+
+                    <!-- Handle notification types -->
+                    {% if notification.notification_type == 'like' and notification.related_tweet %}
+                        <a href="{% url 'tweet_view' notification.related_tweet.id %}" class="text-primary">View Tweet</a>
+                    {% elif notification.notification_type == 'comment' and notification.related_tweet %}
+                        <a href="{% url 'tweet_view' notification.related_tweet.id %}" class="text-primary">View Comment</a>
+                    {% elif notification.notification_type == 'message' and notification.related_message %}
+                        <a href="{% url 'get_messages' notification.related_message.sender.id %}" class="text-primary">View Message</a>
+                    {% elif notification.notification_type == 'follow' %}
+                        <a href="{% url 'user_details' notification.sender.id %}" class="text-primary">View Profile</a>
+                    {% elif notification.notification_type == 'tweet' and notification.related_tweet %}
+                        <a href="{% url 'tweet_view' notification.related_tweet.id %}" class="text-primary">View Tweet</a>
+                    {% endif %}
+
+                    <small class="text-muted d-block mt-1">
+                        {{ notification.created_at|date:"Y-m-d H:i:s" }}
+                    </small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info mt-4" role="alert">
+            You have no unread notifications.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
