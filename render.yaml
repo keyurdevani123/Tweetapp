@@ -2,8 +2,11 @@ services:
   - type: web
     name: tweetapp
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn TweetApp.wsgi:application
     envVars:
       - key: PYTHON_VERSION
-        value: 3.13.4 
+        value: 3.13.4
+      - key: DJANGO_SETTINGS_MODULE
+        value: TweetApp.settings 
