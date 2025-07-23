@@ -1,4 +1,4 @@
-# 🐦 Django Twitter Clone
+#  Django Twitter Clone
 
 A simple Twitter-like social media app built with **Django**, **Bootstrap**, and **SQLite**. Users can post tweets, like, comment, follow others, send messages, and receive notifications.
 
