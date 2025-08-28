@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Tweet Details{% endblock %}
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow-lg" style="border-radius: 15px;">
+        <!-- Display Tweet Photo if available -->
+        {% if tweet.photo %}
+        <img src="{{ tweet.photo.url }}" 
+             class="card-img-top" 
+             alt="Tweet Photo" 
+             style="border-radius: 15px 15px 0 0; object-fit: cover; max-height: 400px;">
+        {% endif %}
+        
+        <!-- Card Body -->
+        <div class="card-body">
+            <h5 class="card-title text-primary" style="font-weight: 700;">@{{ tweet.user.username }}</h5>
+            <p class="card-text text-muted" style="font-size: 0.9rem;">
+                <i>Posted on {{ tweet.created_at|date:"F j, Y, g:i a" }}</i>
+            </p>
+            <p class="card-text" style="font-size: 1.1rem;">{{ tweet.text }}</p>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between">
+                {% if tweet.user == user %}
+                <div>
+                    <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                    <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+                {% endif %}
+                <a href="{% url 'tweet_list' %}" class="btn btn-primary btn-sm">Back to Tweets</a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

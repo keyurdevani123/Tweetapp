@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ user.username }} - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container profile-container" style="max-width: 900px; margin-top: 50px;">
+    <!-- Profile Card -->
+    <div class="card profile-card">
+        <div class="card-body profile-card-body">
+            <div class="d-flex align-items-start">
+                <!-- Profile Image with Border -->
+                <a href="{% url 'user_details' user.id %}">
+                    <img src="{% if user.user_profile_image %}{{ user.user_profile_image.url }}{% else %}/static/default_profile.png{% endif %}" 
+                         alt="{{ user.username }}" 
+                         class="rounded-circle border profile-image">
+                </a>
+                <!-- Profile Details -->
+                <div class="profile-details ms-4">
+                    <!-- Username and Full Name Below Image -->
+                    <h4 class="fw-bold mb-1">{{ user.username }}</h4>
+                    <p class="text-muted mb-3" style="font-size: 1rem;">{{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="text-muted mb-4" style="font-size: 0.95rem;">{{ user.bio|default:"No bio provided." }}</p>
+
+                    <!-- Profile Stats: Tweets, Followers, Following -->
+                    <div class="d-flex justify-content-between w-100 profile-stats">
+                        <div class="text-center">
+                            <a href="{% url 'user_tweets' user.id %}" class="text-decoration-none">
+                                <h5 class="mb-0">{{ tweets.count }}</h5>
+                                <p class="text-muted" style="font-size: 0.9rem;">Tweets</p>
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'followers_list' user.id %}" class="text-decoration-none">
+                                <h5 class="mb-0">{{ user.followers.count }}</h5>
+                                <p class="text-muted" style="font-size: 0.9rem;">Followers</p>
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'following_list' user.id %}" class="text-decoration-none">
+                                <h5 class="mb-0">{{ user.following.count }}</h5>
+                                <p class="text-muted" style="font-size: 0.9rem;">Following</p>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-start w-100 mt-3">
+                        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-sm me-3">Edit Profile</a>
+                        <button id="shareButton" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-share-fill"></i> Share Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info (Joined Date) -->
+        <div class="card-footer text-muted text-center profile-footer">
+            <p class="mb-0">Joined on {{ user.date_joined|date:"F j, Y" }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Script for Share Button -->
+<script>
+    document.getElementById('shareButton').addEventListener('click', function () {
+        if (navigator.share) {
+            navigator.share({
+                title: "profile",
+                text: "View this profile",
+                url: window.location.href, // Dynamically use the current page's URL
+            })
+            .then(() => console.log("Profile shared successfully"))
+            .catch((error) => console.error("Error sharing profile:", error));
+        } else {
+            alert("Sharing is not supported on this device/browser.");
+        }
+    });
+</script>
+{% endblock %}

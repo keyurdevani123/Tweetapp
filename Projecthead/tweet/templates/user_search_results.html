@@ -1,0 +1,34 @@
+{% comment %} {% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4 text-center">Search Results{% if query %} for "{{ query }}"{% endif %}</h3>
+
+    <form method="get" action="{% url 'user_search' %}" class="mb-4">
+        <input type="text" name="query" class="form-control" placeholder="Search users" value="{{ query }}">
+    </form>
+
+    {% if users %}
+        <div class="list-group">
+            {% for user in users %}
+                <a href="{% url 'get_messages' user.id %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <img src="{% if user.user_profile_image %}{{ user.user_profile_image.url }}{% else %}{% static 'default_profile.png' %}{% endif %}" alt="{{ user.username }}" class="rounded-circle me-3" width="48" height="48">
+                    <div>
+                        <strong>
+                            {% if user.id == logged_user_id %}
+                                You (Me)
+                            {% else %}
+                                {{ user.username }}
+                            {% endif %}
+                        </strong><br>
+                        <small>Start a conversation</small>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No matching users found.</div>
+    {% endif %}
+</div>
+{% endblock %} {% endcomment %}

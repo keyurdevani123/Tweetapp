@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" 
+     style="min-height: 100vh; background-color:rgb(179, 214, 253);">
+    <div class="card p-4" 
+         style="max-width: 400px; width: 100%; border: 1px solid #dee2e6; 
+                border-radius: 10px; background-color: #ffffff; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+        
+        <h3 class="text-center mb-4" 
+            style="font-weight: 700; color: #343a40; font-size: 1.5rem;">
+            Login
+        </h3>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            
+            <button type="submit" 
+                    class="btn btn-primary w-100 mt-3" 
+                    style="font-size: 1rem; padding: 10px; background-color: #007bff; border-color: #007bff;">
+                Login
+            </button>
+        </form>
+        
+        <div class="text-center mt-3">
+            <a href="{% url 'password_reset' %}" 
+               class="text-decoration-none" 
+               style="font-size: 0.9rem; color: #007bff;">
+                Forgot your password?
+            </a>
+        </div>
+        
+        <p class="text-center mt-3" 
+           style="font-size: 0.9rem; color: #6c757d;">
+            Don’t have an account? 
+            <a href="{% url 'register' %}" 
+               class="text-decoration-none" 
+               style="color: #007bff;">
+                Register now
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}Following - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 50px auto;">
+    <div class="card" style="border-radius: 15px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: none; padding: 20px;">
+        <h4 class="text-center text-dark mb-4">{{ user.username }}'s Following</h4>
+
+        {% if following %}
+            <div class="list-group">
+                {% for follow in following %}
+                <div class="card mb-3" style="border-radius: 10px; border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body d-flex align-items-center">
+                        <a href="{% url 'user_details' follow.id %}" class="d-flex align-items-center text-decoration-none text-dark">
+                            <img src="{% if follow.user_profile_image %}{{ follow.user_profile_image.url }}{% else %}/static/default_profile.png{% endif %}" 
+                                 alt="{{ follow.username }}" 
+                                 class="rounded-circle" 
+                                 style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px;">
+                            <span class="fw-bold">{{ follow.username }}</span>
+                        </a>
+                        <div class="ms-auto">
+                            <a href="{% url 'unfollow_user' follow.id %}" class="btn btn-outline-danger btn-sm">Unfollow</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-3">You are not following anyone yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

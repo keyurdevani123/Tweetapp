@@ -1,0 +1,29 @@
+{% extends "layout.html" %} 
+
+{% block content %}
+    <h1 class="text-center text-green">Tweet Headquarter</h1>
+    
+    <h2>Registration</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+
+    <div style="max-width: 400px; margin: 20px auto;">
+        <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 24px;">
+            <h3 style="margin-top: 0;">Users</h3>
+            <div style="max-height: 300px; overflow-y: auto;">
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for user in users %}
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                            {{ user.username }}{% if user == request.user %} <span style="color: #2196f3; font-weight: bold;">(you)</span>{% endif %}
+                        </li>
+                    {% empty %}
+                        <li>No users found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
